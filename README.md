@@ -1,4 +1,2 @@
 # sshca
 Serverless SSH CA
-
-
