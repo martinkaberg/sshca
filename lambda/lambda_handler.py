@@ -83,7 +83,7 @@ def lambda_handler(event, context=None, ca_private_key_password=None,
     """
     # AWS Region determines configs related to KMS
     region = os.environ['AWS_REGION']
-    payload = json.loads(event["body"])
+
     config = BlessConfig(region, config_file=config_file)
     logging_level = config.get(BLESS_OPTIONS_SECTION, LOGGING_LEVEL_OPTION)
     numeric_level = getattr(logging, logging_level.upper(), None)
@@ -92,9 +92,9 @@ def lambda_handler(event, context=None, ca_private_key_password=None,
 
     logger = logging.getLogger()
     logger.setLevel(numeric_level)
-    if payload["httpMethod"] == "GET":
+    if event["httpMethod"] == "GET":
         return dump_pub_ca(config, logger)
-
+    payload = json.loads(event["body"])
     certificate_validity_window_seconds = config.getint(BLESS_OPTIONS_SECTION,
                                                         CERTIFICATE_VALIDITY_WINDOW_SEC_OPTION)
     entropy_minimum_bits = config.getint(BLESS_OPTIONS_SECTION, ENTROPY_MINIMUM_BITS_OPTION)
