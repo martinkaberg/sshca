@@ -170,9 +170,9 @@ def lambda_handler(event, context=None, ca_private_key_password=None,
     cert_builder.set_key_id(key_id)
     cert = cert_builder.get_cert_file()
 
-    logger.info(
-        'Issued a cert to bastion_ip[{}] for the remote_username of [{}] with the key_id[{}] and '
-        'valid_from[{}])'.format(
-            request.bastion_ip, request.remote_username, key_id,
-            time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(valid_after))))
+    #logger.info(
+    #    'Issued a cert to bastion_ip[{}] for the remote_username of [{}] with the key_id[{}] and '
+    #    'valid_from[{}])'.format(
+    #        request.bastion_ip, request.remote_username, key_id,
+    #        time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime(valid_after))))
     return respond(None, cert)
