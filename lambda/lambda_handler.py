@@ -131,8 +131,14 @@ def lambda_handler(event, context=None, ca_private_key_password=None,
 
     # Modify the payload
     params = {}
-    params["username"] = event["requestContext"]["identity"]["user"]
     params["iam_arn"] = event["requestContext"]["identity"]["userArn"]
+    if event["requestContext"]["identity"]["userArn"] == "arn:aws:iam::{}:root".format( event["requestContext"]["identity"]["accountId"]) :
+        params["username"] = "test"
+    else:
+        if "@" in params["iam_arn"]:
+            params["username"] = params["iam_arn"].split("/")[1].split("@")[0]
+        else:
+            params["username"] = params["iam_arn"].split("/")[1]
 
     params["public_key_to_sign"] = payload["public_key_to_sign"]
     # Process cert request
