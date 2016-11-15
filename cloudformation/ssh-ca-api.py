@@ -122,16 +122,18 @@ invoke_policy = iam.ManagedPolicy(
                     }
                 }
             },
-            {
-                "Sid": "Stmt1479118649000",
-                "Effect": "Allow",
-                "Action": [
-                    "sts:GetSessionToken"
-                ],
-                "Resource": [
-                    "*"
-                ]
-            }
+             {
+                    "Effect": "Allow",
+                    "Sid": "AllowIndividualUserToListTheirOwnMFA",
+                    "Action": [
+                        "iam:ListVirtualMFADevices",
+                        "iam:ListMFADevices"
+                    ],
+                    "Resource": [
+                        Join("", ["arn:aws:iam::", Ref("AWS::AccountId"), ":mfa/*"]),
+                        Join("", ["arn:aws:iam::", Ref("AWS::AccountId"), ":user/${aws:username}"]),
+                    ]
+                },
         ]
     }
 )
