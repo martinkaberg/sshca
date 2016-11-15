@@ -44,6 +44,11 @@ service sshd restart
 ```
 
 ### For one user
+
+Add it to authorized_keys and prepend cert-authority
+
+unfortunately its not possible to import public keys beginning with cert-authority to EC2 key pairs
+
 ```
 echo $(echo -n "cert-authority "; curl https://$API_ID.execute-api.eu-west-1.amazonaws.com/dev/cert) > ~/.ssh/authorized_keys
 ```
