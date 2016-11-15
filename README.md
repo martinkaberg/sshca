@@ -26,7 +26,7 @@ add too sshd config
 TrustedUserCAKeys /etc/ssh/ca.pub
 LogLevel VERBOSE
 
-</code>
+```
 
 
 run this as root
@@ -38,7 +38,7 @@ bash scripts/get-ca.sh dev > /etc/ssh/ca.pub
 chmod 0600 /etc/ssh/ca.pub
 service sshd restart
 
-</code>
+```
 
 
 ## on client
@@ -50,7 +50,7 @@ Get a new cert
 python scripts/get-cert.py --host $API_ID.execute-api.eu-west-1.amazonaws.com --public-key-file ~/.ssh/id_rsa.pub --stage dev
 
 
-</code>
+```
 
 
 You could also create an alias
@@ -60,7 +60,7 @@ You could also create an alias
 
 alias ssh='python scripts/get-cert.py --host $API_ID.execute-api.eu-west-1.amazonaws.com --stage dev --public-key-file ~/.ssh/id_rsa.pub; ssh'
 
-</code>
+```
 
 
 To view the cert
@@ -72,7 +72,7 @@ To view the cert
 ssh-keygen -L -f ~/.ssh/id_rsa-cert.pub
 
 
-</code>
+```
 
 
 
