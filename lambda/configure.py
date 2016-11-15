@@ -8,7 +8,7 @@ import ConfigParser
 
 @click.command()
 @click.option('--password', prompt="Input pass phrase ", hide_input=False,
-              help="very long and random pass phrase for the private key. $(pwgen -cnys 128) should do")
+              help="very long and random pass phrase for the private key. $(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c128) should do")
 @click.option('--key-alias', default="bless", help="Alias of the kms key you want to use")
 @click.option('--build-dir', default="build", help="Build dir relative to this file")
 @click.option('--key-comment', default="bless-ca", help="comment for the public key")
