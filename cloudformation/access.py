@@ -104,3 +104,5 @@ t.add_output(Output(
         Sub("${AWS::StackName}-" + ssh_ca_api_role.title)
     )
 ))
+
+print t.to_json()

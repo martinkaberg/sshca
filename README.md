@@ -9,7 +9,7 @@ Serverless SSH CA
 * git clone https://github.com/martinkaberg/sshca.git
 * cd sshca
 * sudo pip install -r requirments.txt
-* bash create-on-aws-linux.sh
+* bash create-on-aws-linux.sh KMS_KEY_ARN
 
 
 

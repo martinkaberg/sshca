@@ -2,3 +2,4 @@ awsrequests
 click
 boto3
 troposphere
+awacs

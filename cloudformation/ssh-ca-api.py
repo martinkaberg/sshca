@@ -14,7 +14,7 @@ access_stack = t.add_parameter(Parameter(
     "AccessStack",
     Type="String",
     Description="Access stack name",
-    Default="access-stack"
+    Default="access"
 ))
 dir = os.path.dirname(__file__)
 with open(os.path.join(dir, "../swagger/dev.json")) as json_data:
@@ -26,7 +26,26 @@ api = t.add_resource(apigateway.RestApi(
     # Body=swagger
 ))
 
-LAMBDA_ARN = "arn:aws:lambda:eu-west-1:486089510432:function:testrest"
+
+bless = t.add_resource(awslambda.Function(
+    "Bless",
+    Code=awslambda.Code(
+        S3Bucket=ImportValue(
+            Sub("${AccessStack}-LambdaBucket")
+        ),
+        S3Key="bless_lambda.zip"
+    ),
+    FunctionName="bless-api",
+    Handler="lambda_handler.lambda_handler",
+    MemorySize="128",
+    Role=ImportValue(
+        Sub("${AccessStack}-BlessRole")
+    ),
+    Runtime="python2.7",
+    Timeout=300
+
+))
+LAMBDA_ARN = GetAtt(bless,"Arn")
 invoke_perm = t.add_resource(awslambda.Permission(
     "InvokePerm",
     Action="lambda:InvokeFunction",
@@ -34,14 +53,11 @@ invoke_perm = t.add_resource(awslambda.Permission(
     Principal="apigateway.amazonaws.com",
 ))
 
-
 account = t.add_resource(apigateway.Account(
     "Account",
     DependsOn=api.title,
     CloudWatchRoleArn=ImportValue(
-
-        Sub("${AccessStack}-Vpc")
-
+        Sub("${AccessStack}-SshCaApiRole")
     )
 ))
 
@@ -61,49 +77,38 @@ proxy_resource = t.add_resource(apigateway.Resource(
 
 ))
 
-any = t.add_resource(apigateway.Method(
-    "Any",
+post = t.add_resource(apigateway.Method(
+    "Post",
     ApiKeyRequired=False,
     AuthorizationType="AWS_IAM",
-    HttpMethod="ANY",
+    HttpMethod="POST",
     MethodResponses=[],
     Integration=apigateway.Integration(
         Type="AWS_PROXY",
         IntegrationHttpMethod="POST",
         Uri="arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/{}/invocations".format(LAMBDA_ARN),
         PassthroughBehavior="Never",
-        IntegrationResponses= []
-
-
+        IntegrationResponses=[]
 
     ),
     ResourceId=Ref(proxy_resource),
     RestApiId=Ref(api)
 ))
-
-
-get_cert = t.add_resource(apigateway.Method(
-    "GetCert",
+get = t.add_resource(apigateway.Method(
+    "Get",
     ApiKeyRequired=False,
     AuthorizationType="AWS_IAM",
     HttpMethod="GET",
+    MethodResponses=[],
     Integration=apigateway.Integration(
+        Type="AWS_PROXY",
         IntegrationHttpMethod="POST",
-        PassthroughBehavior="WHEN_NO_MATCH",
-        Type="AWS",
         Uri="arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/{}/invocations".format(LAMBDA_ARN),
-        IntegrationResponses=[
-            apigateway.IntegrationResponse(
-                StatusCode="200",
-
-            )],
+        PassthroughBehavior="Never",
+        IntegrationResponses=[]
 
     ),
-    MethodResponses=[apigateway.MethodResponse(
-        StatusCode="200"
-    )],
-
-    ResourceId=Ref(cert_resource),
+    ResourceId=Ref(proxy_resource),
     RestApiId=Ref(api)
 ))
 
@@ -114,7 +119,7 @@ t.add_output(Output(
 
 deployment = t.add_resource(apigateway.Deployment(
     "Deployment",
-    DependsOn=[get_cert.title],
+    DependsOn=[get.title, post.title],
     RestApiId=Ref(api),
     StageDescription=apigateway.StageDescription(
         CacheClusterEnabled=False,
