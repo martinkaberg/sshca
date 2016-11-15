@@ -57,6 +57,6 @@ make all
 aws s3 cp build/publish/bless_lambda.zip s3://${LAMBDA_BUCKET}
 make clean
 cd ../cloudformation
-python ssh-ca-api.py | aws s3 cp - s3://${CFN_BUCKET}
-aws cloudformation create-stack --stack-name ssh-ca-api2 --template-url "https://s3.amazonaws.com/${CFN_BUCKET}/ssh-ca-api.py" --parameters  ParameterKey=AccessStack,ParameterValue=access,UsePreviousValue=False --capabilities CAPABILITY_IAM
+python ssh-ca-api.py | aws s3 cp - s3://${CFN_BUCKET}/ssh-ca-api.template
+aws cloudformation create-stack --stack-name ssh-ca-api2 --template-url "https://s3.amazonaws.com/${CFN_BUCKET}/ssh-ca-api.template" --parameters  ParameterKey=AccessStack,ParameterValue=access,UsePreviousValue=False --capabilities CAPABILITY_IAM
 wait_for_stack ssh-ca-api2
