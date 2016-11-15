@@ -103,7 +103,7 @@ invoke_perm_post = t.add_resource(awslambda.Permission(
              "/*/POST/*"
         ])])
 ))
-post = t.add_resource(apigateway.Method(
+post = apigateway.Method(
     "Post",
     DependsOn=[invoke_perm_post.title],
     ApiKeyRequired=False,
@@ -120,8 +120,8 @@ post = t.add_resource(apigateway.Method(
     ),
     ResourceId=Ref(proxy_resource),
     RestApiId=Ref(api)
-))
-get = t.add_resource(apigateway.Method(
+)
+get = apigateway.Method(
     "Get",
     DependsOn=[invoke_perm_get.title],
     ApiKeyRequired=False,
@@ -140,7 +140,7 @@ get = t.add_resource(apigateway.Method(
     ),
     ResourceId=Ref(proxy_resource),
     RestApiId=Ref(api)
-))
+)
 
 t.add_output(Output(
     "RootResourceId",
