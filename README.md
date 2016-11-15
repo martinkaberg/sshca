@@ -19,6 +19,8 @@
 
 ## on server
 
+
+### Global config
 add too sshd config
 
 
@@ -41,7 +43,10 @@ service sshd restart
 
 ```
 
-
+### For one user
+```
+echo $(echo -n "cert-authority "; curl https://$API_ID.execute-api.eu-west-1.amazonaws.com/dev/cert) > ~/.ssh/authorized_keys
+```
 ## on client
 Get a new cert
 
