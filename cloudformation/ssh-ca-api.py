@@ -26,7 +26,6 @@ api = t.add_resource(apigateway.RestApi(
     # Body=swagger
 ))
 
-
 bless = t.add_resource(awslambda.Function(
     "Bless",
     Code=awslambda.Code(
@@ -45,8 +44,8 @@ bless = t.add_resource(awslambda.Function(
     Timeout=300
 
 ))
-LAMBDA_ARN = GetAtt(bless,"Arn")
-LAMBDA_URI = Join("",[
+LAMBDA_ARN = GetAtt(bless, "Arn")
+LAMBDA_URI = Join("", [
     "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/",
     LAMBDA_ARN,
     "invocations"
@@ -89,9 +88,10 @@ post = t.add_resource(apigateway.Method(
     HttpMethod="POST",
     Integration=apigateway.Integration(
         Type="AWS_PROXY",
+        IntegrationHttpMethod="POST",
         Uri=LAMBDA_URI,
-        PassthroughBehavior="Never",
-        IntegrationResponses=[]
+        #PassthroughBehavior="Never",
+
 
     ),
     ResourceId=Ref(proxy_resource),
@@ -104,9 +104,10 @@ get = t.add_resource(apigateway.Method(
     HttpMethod="GET",
     Integration=apigateway.Integration(
         Type="AWS_PROXY",
+        IntegrationHttpMethod="POST",
         Uri=LAMBDA_URI,
-        PassthroughBehavior="Never",
-        IntegrationResponses=[]
+        #PassthroughBehavior="Never",
+
 
     ),
     ResourceId=Ref(proxy_resource),
