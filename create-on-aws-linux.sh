@@ -103,6 +103,9 @@ wait_for_stack ssh-ca-api
 API_ID=$(get_output_value ssh-ca-api Api)
 cd ..
 API_HOST=$(get_output_value ssh-ca-api Host)
+INVOKE_POLICY=$(get_output_value ssh-ca-api InvokePolicy)
+echo "Testing the public get method to get the CA"
 script/get-ca.sh dev
 echo "with an iam user run:"
 echo "python scripts/get-cert.py --host ${API_HOST} --stage dev --public-key-file ~/.ssh/id_rsa.pub"
+echo "Iam users that should have this policy attached to them ${INVOKE_POLICY}"
