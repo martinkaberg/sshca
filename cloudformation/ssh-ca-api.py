@@ -147,22 +147,22 @@ t.add_output(Output(
     Value=GetAtt(api, "RootResourceId")
 ))
 
-deployment = t.add_resource(apigateway.Deployment(
-    "Deployment",
-    #DependsOn=[get.title, post.title],
-    RestApiId=Ref(api),
-    StageDescription=apigateway.StageDescription(
-        CacheClusterEnabled=False,
-        StageName="dev"
-    ),
-    StageName="dev"
-
-))
-
-t.add_output(Output(
-    "Deployment",
-    Value=Ref(deployment)
-))
+# deployment = t.add_resource(apigateway.Deployment(
+#     "Deployment",
+#     #DependsOn=[get.title, post.title],
+#     RestApiId=Ref(api),
+#     StageDescription=apigateway.StageDescription(
+#         CacheClusterEnabled=False,
+#         StageName="dev"
+#     ),
+#     StageName="dev"
+#
+# ))
+#
+# t.add_output(Output(
+#     "Deployment",
+#     Value=Ref(deployment)
+# ))
 
 t.add_output(Output(
     "Api",
