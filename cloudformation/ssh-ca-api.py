@@ -34,7 +34,7 @@ api = t.add_resource(apigateway.RestApi(
 
 
 LAMBDA_ARN = ImportValue(
-        Sub("${AccessStack}-Bless")
+        Sub("${LambdaStack}-Bless")
 )
 LAMBDA_URI = Join("/", [
     "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/",
