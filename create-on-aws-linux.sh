@@ -111,7 +111,7 @@ echo "with an iam user run:"
 echo ""
 echo "python scripts/get-cert.py --host ${API_HOST} --stage dev --public-key-file ~/.ssh/id_rsa.pub"
 echo ""
-echo "python scripts/get-cert-no-mfa.py --host ga56e1apu8.execute-api.eu-west-1.amazonaws.com --stage dev --public-key-file ~/.ssh/id_rsa.pub"
+echo "python scripts/get-cert-no-mfa.py --host ${API_HOST}.execute-api.eu-west-1.amazonaws.com --stage dev --public-key-file ~/.ssh/id_rsa.pub"
 echo ""
 echo "The 2nd one should fail if youhave attached the policy"
 
