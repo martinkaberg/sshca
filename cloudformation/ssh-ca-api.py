@@ -22,10 +22,7 @@ lambda_stack = t.add_parameter(Parameter(
     Description="Access stack name",
     Default="lambda"
 ))
-dir = os.path.dirname(__file__)
-#with open(os.path.join(dir, "../swagger/dev.json")) as json_data:
-#    swagger = json.load(json_data)
-#swagger["info"]["title"] = "ssh-ca"
+
 api = t.add_resource(apigateway.RestApi(
     "Api",
     Name="ssh-ca-cfn",
@@ -35,11 +32,6 @@ api = t.add_resource(apigateway.RestApi(
 LAMBDA_ARN = ImportValue(
     Sub("${LambdaStack}-Bless")
 )
-LAMBDA_URI = Join("/", [
-    "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/",
-    LAMBDA_ARN,
-    "invocations"
-])
 
 account = t.add_resource(apigateway.Account(
     "Account",

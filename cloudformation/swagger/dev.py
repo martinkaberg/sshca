@@ -1,4 +1,4 @@
-from troposphere import Join, Ref
+from troposphere import Join, Ref, ImportValue, Sub
 
 schema = {
     "swagger": "2.0",
@@ -35,13 +35,16 @@ schema = {
                 },
                 "x-amazon-apigateway-integration": {
                     # "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:486089510432:function:blessapi/invocations",
-                    "uri": Join(":",[
+                    "uri": Join(":", [
                         "arn:aws:apigateway",
                         Ref("AWS::Region"),
-                        "lambda:path/2015-03-31/functions/arn:aws:lambda",
-                        Ref("AWS::Region"),
-                        Ref("AWS::AccountId"),
-                        "function:blessapi/invocations"
+                        Join("/", [
+                            "lambda:path/2015-03-31/functions",
+                            ImportValue(
+                                Sub("${LambdaStack}-Bless")
+                            ),
+                            "invocations"
+                        ])
                     ]),
                     "responses": {
                         "default": {
@@ -83,13 +86,16 @@ schema = {
                     }
                 ],
                 "x-amazon-apigateway-integration": {
-                    "uri": Join(":",[
+                    "uri": Join(":", [
                         "arn:aws:apigateway",
                         Ref("AWS::Region"),
-                        "lambda:path/2015-03-31/functions/arn:aws:lambda",
-                        Ref("AWS::Region"),
-                        Ref("AWS::AccountId"),
-                        "function:blessapi/invocations"
+                        Join("/", [
+                            "lambda:path/2015-03-31/functions",
+                            ImportValue(
+                                Sub("${LambdaStack}-Bless")
+                            ),
+                            "invocations"
+                        ])
                     ]),
                     "responses": {
                         "default": {
