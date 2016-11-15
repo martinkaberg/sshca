@@ -13,6 +13,7 @@
 * git clone https://github.com/martinkaberg/sshca.git
 * cd sshca
 * bash create-on-aws-linux.sh KMS_KEY_ARN
+* Attach the InvokePolicy to the users/group
 
 
 
