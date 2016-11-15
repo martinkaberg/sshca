@@ -16,10 +16,12 @@ kms_arn = t.add_parameter(Parameter(
     Default="arn:aws:kms:eu-west-1:486089510432:key/3704248a-2168-4d0c-937a-344e0ecdcbb2"
 ))
 lambda_bucket = t.add_resource(s3.Bucket(
-    "LambdaBucket"
+    "LambdaBucket",
+    DeletionPolicy="Delete"
 ))
 cfn_bucket = t.add_resource(s3.Bucket(
-    "CfnBucket"
+    "CfnBucket",
+    DeletionPolicy="Delete"
 ))
 
 t.add_output(Output(
