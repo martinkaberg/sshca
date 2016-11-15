@@ -102,8 +102,5 @@ wait_for_stack ssh-ca-api
 API_ID=$(get_output_value ssh-ca-api Api)
 cd ..
 API_HOST="${API_ID}.execute-api.eu-west-1.amazonaws.com"
-echo "Testing pub CA:"
+echo "Testing pub CA: https://${API_HOST}/dev/cert"
 curl -vvv "https://${API_HOST}/dev/cert"
-echo "Testing cert signing":
-ssh-keygen -b 4096 -t rsa -f ~/.ssh/test-id_rsa
-python scripts/get-cert.py --host "${API_HOST}" --public-key-file ~/.ssh/test-id_rsa --stage dev

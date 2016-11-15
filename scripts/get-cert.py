@@ -36,7 +36,7 @@ def main(token_code, host, stage, public_key_file):
         session_token=token["SessionToken"],
         session_expires=token["Expiration"]
     )
-
+    click.echo(pub_key)
     response = req.post(
         "https://{}/{}/{}".format(host, stage, "cert"),
         json={
@@ -44,6 +44,7 @@ def main(token_code, host, stage, public_key_file):
         },
         verify=True
     )
+    click.echo(response.text)
     cert_file = '.'.join(public_key_file.split(".")[:-1]) + "-cert.pub"
     with open(cert_file, "w+") as f:
         f.write(response.text)

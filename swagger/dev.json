@@ -4,7 +4,7 @@
     "version": "2016-11-15T04:23:30Z",
     "title": "ssh-ca-cfn"
   },
-  "host": "jokl5ev0qg.execute-api.eu-west-1.amazonaws.com",
+  "host": "570qkeqvr9.execute-api.eu-west-1.amazonaws.com",
   "basePath": "/dev",
   "schemes": [
     "https"
@@ -67,6 +67,11 @@
             }
           }
         },
+        "security": [
+          {
+            "sigv4": []
+          }
+        ],
         "x-amazon-apigateway-integration": {
           "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:486089510432:function:blessapi/invocations",
           "responses": {
@@ -83,6 +88,14 @@
           "type": "aws_proxy"
         }
       }
+    }
+  },
+  "securityDefinitions": {
+    "sigv4": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "x-amazon-apigateway-authtype": "awsSigv4"
     }
   },
   "definitions": {
