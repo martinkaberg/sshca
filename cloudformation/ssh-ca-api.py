@@ -34,7 +34,7 @@ bless = t.add_resource(awslambda.Function(
         ),
         S3Key="bless_lambda.zip"
     ),
-    FunctionName="bless-api",
+    FunctionName="blessapi",
     Handler="lambda_handler.lambda_handler",
     MemorySize="128",
     Role=ImportValue(
