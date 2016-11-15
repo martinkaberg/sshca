@@ -106,6 +106,13 @@ API_HOST=$(get_output_value ssh-ca-api Host)
 INVOKE_POLICY=$(get_output_value ssh-ca-api InvokePolicy)
 echo "Testing the public get method to get the CA"
 bash scripts/get-ca.sh dev
-echo "with an iam user run:"
-echo "python scripts/get-cert.py --host ${API_HOST} --stage dev --public-key-file ~/.ssh/id_rsa.pub"
 echo "Iam users should have this policy attached to them ${INVOKE_POLICY}"
+echo "with an iam user run:"
+echo ""
+echo "python scripts/get-cert.py --host ${API_HOST} --stage dev --public-key-file ~/.ssh/id_rsa.pub"
+echo ""
+echo "python scripts/get-cert-no-mfa.py --host ga56e1apu8.execute-api.eu-west-1.amazonaws.com --stage dev --public-key-file ~/.ssh/id_rsa.pub"
+echo ""
+echo "The 2nd one should fail if youhave attached the policy"
+
+
