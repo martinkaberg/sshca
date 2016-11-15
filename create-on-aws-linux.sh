@@ -95,5 +95,13 @@ python lambda.py | aws s3 cp - s3://${CFN_BUCKET}/lambda.template
 stack_exists lambda || aws cloudformation create-stack --stack-name lambda --template-url "https://s3.amazonaws.com/${CFN_BUCKET}/lambda.template" --parameters ParameterKey=AccessStack,ParameterValue=access,UsePreviousValue=False --capabilities CAPABILITY_IAM
 wait_for_stack lambda
 python ssh-ca-api.py | aws s3 cp - s3://${CFN_BUCKET}/ssh-ca-api.template
-stack_exists ssh-ca-api2 || aws cloudformation create-stack --stack-name ssh-ca-api2 --template-url "https://s3.amazonaws.com/${CFN_BUCKET}/ssh-ca-api.template" --parameters ParameterKey=AccessStack,ParameterValue=access,UsePreviousValue=False ParameterKey=LambdaStack,ParameterValue=lambda,UsePreviousValue=False --capabilities CAPABILITY_IAM
-wait_for_stack ssh-ca-api2
+stack_exists ssh-ca-api || aws cloudformation create-stack --stack-name ssh-ca-api --template-url "https://s3.amazonaws.com/${CFN_BUCKET}/ssh-ca-api.template" --parameters ParameterKey=AccessStack,ParameterValue=access,UsePreviousValue=False ParameterKey=LambdaStack,ParameterValue=lambda,UsePreviousValue=False --capabilities CAPABILITY_IAM
+wait_for_stack ssh-ca-api
+API_ID=$(get_output_value ssh-ca-api Api)
+cd ..
+API_HOST="${API_ID}.execute-api.eu-west-1.amazonaws.com"
+echo "Testing pub CA:"
+curl -vvv "https://${API_HOST}/dev/cert"
+echo "Testing cert signing":
+ssh-keygen -b 4096 -t rsa -f ~/.ssh/test-id_rsa
+python scripts/get-cert.py --host "${API_HOST} --public-key-file ~/.ssh/test-id_rsa --stage dev
