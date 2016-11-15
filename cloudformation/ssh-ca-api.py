@@ -122,18 +122,27 @@ invoke_policy = iam.ManagedPolicy(
                     }
                 }
             },
-             {
-                    "Effect": "Allow",
-                    "Sid": "AllowIndividualUserToListTheirOwnMFA",
-                    "Action": [
-                        "iam:ListVirtualMFADevices",
-                        "iam:ListMFADevices"
-                    ],
-                    "Resource": [
-                        Join("", ["arn:aws:iam::", Ref("AWS::AccountId"), ":mfa/*"]),
-                        Join("", ["arn:aws:iam::", Ref("AWS::AccountId"), ":user/${aws:username}"]),
-                    ]
-                },
+            {
+                "Effect": "Allow",
+                "Sid": "AllowIndividualUserToListTheirOwnMFA",
+                "Action": [
+                    "iam:ListVirtualMFADevices",
+                    "iam:ListMFADevices"
+                ],
+                "Resource": [
+                    "*"
+                ]
+            },
+            {
+                "Sid": "AllowAllUsersToListAccounts",
+                "Effect": "Allow",
+                "Action": [
+                    "iam:ListAccountAliases",
+                    "iam:ListUsers",
+                    "iam:GetAccountSummary"
+                ],
+                "Resource": "*"
+            },
         ]
     }
 )
