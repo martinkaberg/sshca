@@ -88,8 +88,7 @@ ssh-keygen -L -f ~/.ssh/id_rsa-cert.pub
 ### ssh-ca-api.py
 
 * takes AccessStack and LambdaStack as parameters
-* creates ssh-ca-cfn rest api from swagger/dev.json
-* Note that you need to
+* creates ssh-ca-cfn
 * grants GET and POST access to lambda
 * creates and InvokePolicy, that should be attached to iam users to enforce MFA
 * creates a deployment stage called dev
