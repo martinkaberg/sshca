@@ -86,12 +86,13 @@ post = t.add_resource(apigateway.Method(
     ApiKeyRequired=False,
     AuthorizationType="AWS_IAM",
     HttpMethod="POST",
+    MethodResponses=[],
     Integration=apigateway.Integration(
         Type="AWS_PROXY",
         IntegrationHttpMethod="POST",
         Uri=LAMBDA_URI,
-        #PassthroughBehavior="Never",
-
+        PassthroughBehavior="Never",
+        IntegrationResponses=[]
 
     ),
     ResourceId=Ref(proxy_resource),
@@ -102,18 +103,26 @@ get = t.add_resource(apigateway.Method(
     ApiKeyRequired=False,
     AuthorizationType="AWS_IAM",
     HttpMethod="GET",
+    MethodResponses=[],
+
     Integration=apigateway.Integration(
         Type="AWS_PROXY",
         IntegrationHttpMethod="POST",
         Uri=LAMBDA_URI,
-        #PassthroughBehavior="Never",
+        PassthroughBehavior="Never",
+        IntegrationResponses=[]
 
 
     ),
     ResourceId=Ref(proxy_resource),
     RestApiId=Ref(api)
 ))
-
+invoke_perm = t.add_resource(awslambda.Permission(
+    "InvokePerm",
+    Action="lambda:InvokeFunction",
+    FunctionName=LAMBDA_ARN,
+    Principal="apigateway.amazonaws.com",
+))
 t.add_output(Output(
     "RootResourceId",
     Value=GetAtt(api, "RootResourceId")
