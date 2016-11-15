@@ -5,10 +5,8 @@ Serverless SSH CA
 * create an instance profile with admin privileges
 * start up an aws linux ec2 instance with that profile
 * ssh into it
-* sudo yum install gcc libffi-devel python-devel openssl-devel git
 * git clone https://github.com/martinkaberg/sshca.git
 * cd sshca
-* sudo pip install -r requirments.txt
 * bash create-on-aws-linux.sh KMS_KEY_ARN
 
 

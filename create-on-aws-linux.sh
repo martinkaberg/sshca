@@ -40,6 +40,8 @@ function get_output_value()
 
 }
 export AWS_DEFAULT_REGION=eu-west-1
+sudo yum -y install gcc libffi-devel python-devel openssl-devel git jq
+sudo pip install -r requirements.txt --upgrade
 cd cloudformation
 python access.py > access.template
 aws cloudformation create-stack --stack-name access --template-body file://access.template --parameters  ParameterKey=KmsArn,ParameterValue=${KMS_KEY_ARN},UsePreviousValue=False --capabilities CAPABILITY_IAM
