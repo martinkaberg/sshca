@@ -86,10 +86,12 @@ stack_exists access || aws cloudformation create-stack --stack-name access --tem
 wait_for_stack access
 LAMBDA_BUCKET=$(get_output_value access LambdaBucket)
 CFN_BUCKET=$(get_output_value access CfnBucket)
-cd ../lambda
-make all
-aws s3 cp build/publish/bless_lambda.zip s3://${LAMBDA_BUCKET}
-make clean
+stack_exists lambda || {
+	cd ../lambda
+	make all
+	aws s3 cp build/publish/bless_lambda.zip s3://${LAMBDA_BUCKET}
+	make clean
+}
 cd ../cloudformation
 python lambda.py | aws s3 cp - s3://${CFN_BUCKET}/lambda.template
 stack_exists lambda || aws cloudformation create-stack --stack-name lambda --template-url "https://s3.amazonaws.com/${CFN_BUCKET}/lambda.template" --parameters ParameterKey=AccessStack,ParameterValue=access,UsePreviousValue=False --capabilities CAPABILITY_IAM
@@ -104,4 +106,4 @@ echo "Testing pub CA:"
 curl -vvv "https://${API_HOST}/dev/cert"
 echo "Testing cert signing":
 ssh-keygen -b 4096 -t rsa -f ~/.ssh/test-id_rsa
-python scripts/get-cert.py --host "${API_HOST} --public-key-file ~/.ssh/test-id_rsa --stage dev
+python scripts/get-cert.py --host "${API_HOST}" --public-key-file ~/.ssh/test-id_rsa --stage dev
