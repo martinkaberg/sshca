@@ -1,6 +1,6 @@
 from troposphere import (
     Template, GetAZs, Select, Ref, Parameter, Base64,
-    Join, GetAtt, Output, Not, Equals, If, ec2, iam, awslambda, ImportValue, Sub, apigateway
+    Join, GetAtt, Output, Not, Equals, If, ec2, iam, awslambda, ImportValue, Sub, apigateway, Export
 )
 import json, os
 
@@ -39,7 +39,7 @@ bless = t.add_resource(awslambda.Function(
 t.add_output(Output(
     bless.title,
     Value=GetAtt(bless,"Arn"),
-    Export=bless(
+    Export=Export(
         Sub("${AWS::StackName}-" + bless.title)
     )
 ))
