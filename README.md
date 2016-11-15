@@ -11,20 +11,6 @@ Serverless SSH CA
 
 
 
-
-
-** Build **
-
-I was not able to create a working zip file on my ubuntu laptop. Works fine on EC2 instance
-
-make sure you have a kms key that your iam user/role can use Encrypt with. The alias of the key must be bless
-
-
-
-
-
-
-
 ** on server **
 
 add too sshd config
@@ -39,6 +25,6 @@ service sshd restart
 
 ** on client **
 
-python scripts/get-cert.py --host joxcu5vyr0.execute-api.eu-west-1.amazonaws.com --public-key-file ~/.ssh/id_rsa.pub --stage dev2
+python scripts/get-cert.py --host $API_ID.execute-api.eu-west-1.amazonaws.com --public-key-file ~/.ssh/id_rsa.pub --stage dev
 
 

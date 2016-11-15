@@ -1,6 +1,6 @@
 from troposphere import (
     Template, GetAZs, Select, Ref, Parameter, Base64,
-    Join, GetAtt, Output, Not, Equals, If, ec2, iam, awslambda, ImportValue, Sub, apigateway
+    Join, GetAtt, Output, Not, Equals, If, ec2, iam, awslambda, ImportValue, Sub, apigateway, Export
 )
 import json, os
 
@@ -32,16 +32,14 @@ api = t.add_resource(apigateway.RestApi(
     Body=swagger
 ))
 
-
 LAMBDA_ARN = ImportValue(
-        Sub("${LambdaStack}-Bless")
+    Sub("${LambdaStack}-Bless")
 )
 LAMBDA_URI = Join("/", [
     "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/",
     LAMBDA_ARN,
     "invocations"
 ])
-
 
 account = t.add_resource(apigateway.Account(
     "Account",
@@ -56,13 +54,13 @@ invoke_perm_get = t.add_resource(awslambda.Permission(
     Action="lambda:InvokeFunction",
     FunctionName=LAMBDA_ARN,
     Principal="apigateway.amazonaws.com",
-    SourceArn=Join(":",[
+    SourceArn=Join(":", [
         "arn:aws:execute-api",
         Ref("AWS::Region"),
         Ref("AWS::AccountId"),
-        Join("",[
+        Join("", [
             Ref(api),
-             "/*/GET/*"
+            "/*/GET/*"
         ])])
 ))
 invoke_perm_post = t.add_resource(awslambda.Permission(
@@ -70,13 +68,13 @@ invoke_perm_post = t.add_resource(awslambda.Permission(
     Action="lambda:InvokeFunction",
     FunctionName=LAMBDA_ARN,
     Principal="apigateway.amazonaws.com",
-    SourceArn=Join(":",[
+    SourceArn=Join(":", [
         "arn:aws:execute-api",
         Ref("AWS::Region"),
         Ref("AWS::AccountId"),
-        Join("",[
+        Join("", [
             Ref(api),
-             "/*/POST/*"
+            "/*/POST/*"
         ])])
 ))
 
@@ -96,6 +94,38 @@ deployment = t.add_resource(apigateway.Deployment(
 
 ))
 
+invoke_policy = iam.ManagedPolicy(
+    "InvokePolicy",
+    PolicyDocument={
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "create-cert",
+                "Effect": "Allow",
+                "Action": [
+                    "execute-api:Invoke"
+                ],
+                "Resource": [
+                    Join(":", [
+                        "arn:aws:execute-api",
+                        Ref("AWS::Region"),
+                        Ref("AWS::AccountId"),
+                        Join("",[
+                            Ref(api),
+                            "/*/POST/*"
+                        ])
+                    ])
+                ],
+                "Condition": {
+                    "Bool": {
+                        "aws:MultiFactorAuthPresent": "true"
+                    }
+                }
+            }
+        ]
+    }
+)
+
 t.add_output(Output(
     "Deployment",
     Value=Ref(deployment)
@@ -105,5 +135,21 @@ t.add_output(Output(
     "Api",
     Value=Ref(api)
 ))
+t.add_output(Output(
+    invoke_policy.title,
+    Value=Ref(invoke_policy),
+    Export=Export(
+        Sub("${AWS::StackName}-" + invoke_policy.title)
+    )
+))
 
+t.add_output(Output(
+    "Host",
+    Value=Join(".",[
+        Ref(api),
+        "execute-api",
+        Ref("AWS::Region"),
+        "amazonaws.com"
+    ])
+))
 print t.to_json()

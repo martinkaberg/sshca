@@ -102,9 +102,7 @@ stack_exists ssh-ca-api || aws cloudformation create-stack --stack-name ssh-ca-a
 wait_for_stack ssh-ca-api
 API_ID=$(get_output_value ssh-ca-api Api)
 cd ..
-API_HOST="${API_ID}.execute-api.eu-west-1.amazonaws.com"
-echo "Testing pub CA: https://${API_HOST}/dev/cert"
-curl -vvv "https://${API_HOST}/dev/cert"
-
+API_HOST=$(get_output_value ssh-ca-api Host)
+script/get-ca.sh dev
 echo "with an iam user run:"
 echo "python scripts/get-cert.py --host ${API_HOST} --stage dev --public-key-file ~/.ssh/id_rsa.pub"
