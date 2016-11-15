@@ -108,4 +108,4 @@ echo "Testing the public get method to get the CA"
 bash scripts/get-ca.sh dev
 echo "with an iam user run:"
 echo "python scripts/get-cert.py --host ${API_HOST} --stage dev --public-key-file ~/.ssh/id_rsa.pub"
-echo "Iam users that should have this policy attached to them ${INVOKE_POLICY}"
+echo "Iam users should have this policy attached to them ${INVOKE_POLICY}"

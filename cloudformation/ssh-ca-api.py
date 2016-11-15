@@ -110,7 +110,7 @@ invoke_policy = iam.ManagedPolicy(
                         "arn:aws:execute-api",
                         Ref("AWS::Region"),
                         Ref("AWS::AccountId"),
-                        Join("",[
+                        Join("", [
                             Ref(api),
                             "/*/POST/*"
                         ])
@@ -121,6 +121,16 @@ invoke_policy = iam.ManagedPolicy(
                         "aws:MultiFactorAuthPresent": "true"
                     }
                 }
+            },
+            {
+                "Sid": "Stmt1479118649000",
+                "Effect": "Allow",
+                "Action": [
+                    "sts:GetSessionToken"
+                ],
+                "Resource": [
+                    "*"
+                ]
             }
         ]
     }
@@ -145,7 +155,7 @@ t.add_output(Output(
 
 t.add_output(Output(
     "Host",
-    Value=Join(".",[
+    Value=Join(".", [
         Ref(api),
         "execute-api",
         Ref("AWS::Region"),
