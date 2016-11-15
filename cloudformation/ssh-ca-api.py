@@ -3,7 +3,7 @@ from troposphere import (
     Join, GetAtt, Output, Not, Equals, If, ec2, iam, awslambda, ImportValue, Sub, apigateway, Export
 )
 import json, os
-
+from swagger.dev import schema
 from awacs.aws import Policy, Allow, Action, Statement, Principal
 
 t = Template()
@@ -23,13 +23,13 @@ lambda_stack = t.add_parameter(Parameter(
     Default="lambda"
 ))
 dir = os.path.dirname(__file__)
-with open(os.path.join(dir, "../swagger/dev.json")) as json_data:
-    swagger = json.load(json_data)
-swagger["info"]["title"] = "ssh-ca"
+#with open(os.path.join(dir, "../swagger/dev.json")) as json_data:
+#    swagger = json.load(json_data)
+#swagger["info"]["title"] = "ssh-ca"
 api = t.add_resource(apigateway.RestApi(
     "Api",
     Name="ssh-ca-cfn",
-    Body=swagger
+    Body=schema
 ))
 
 LAMBDA_ARN = ImportValue(

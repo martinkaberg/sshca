@@ -89,6 +89,7 @@ ssh-keygen -L -f ~/.ssh/id_rsa-cert.pub
 
 * takes AccessStack and LambdaStack as parameters
 * creates ssh-ca-cfn rest api from swagger/dev.json
+* Note that you need to
 * grants GET and POST access to lambda
 * creates and InvokePolicy, that should be attached to iam users to enforce MFA
 * creates a deployment stage called dev
