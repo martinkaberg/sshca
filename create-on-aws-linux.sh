@@ -55,7 +55,7 @@ function stack_exists()
 		UPDATE_ROLLBACK_COMPLETE
 		REVIEW_IN_PROGRESS
 	)
-	_status=$(aws cloudformation describe-stacks --stack-name ${_stack_name} | jq -r '.Stacks[].StackStatus')
+
 
 	aws cloudformation list-stacks --stack-status-filter ${_filter[@]} | jq -r '.StackSummaries[].StackName' | grep ${_stack_name}
 	return $?

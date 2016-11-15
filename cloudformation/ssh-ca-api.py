@@ -75,9 +75,37 @@ proxy_resource = t.add_resource(apigateway.Resource(
     RestApiId=Ref(api)
 
 ))
-
+invoke_perm_get = t.add_resource(awslambda.Permission(
+    "InvokePermGet",
+    Action="lambda:InvokeFunction",
+    FunctionName=LAMBDA_ARN,
+    Principal="apigateway.amazonaws.com",
+    SourceArn=Join(":",[
+        "arn:aws:execute-api",
+        Ref("AWS::Region"),
+        Ref("AWS::AccountId"),
+        Join("",[
+            Ref(api),
+             "/*/GET/*"
+        ])])
+))
+invoke_perm_post = t.add_resource(awslambda.Permission(
+    "InvokePermPost",
+    Action="lambda:InvokeFunction",
+    FunctionName=LAMBDA_ARN,
+    Principal="apigateway.amazonaws.com",
+    SourceArn=Join(":",[
+        "arn:aws:execute-api",
+        Ref("AWS::Region"),
+        Ref("AWS::AccountId"),
+        Join("",[
+            Ref(api),
+             "/*/POST/*"
+        ])])
+))
 post = t.add_resource(apigateway.Method(
     "Post",
+    DependsOn=[invoke_perm_post.title],
     ApiKeyRequired=False,
     AuthorizationType="AWS_IAM",
     HttpMethod="POST",
@@ -95,6 +123,7 @@ post = t.add_resource(apigateway.Method(
 ))
 get = t.add_resource(apigateway.Method(
     "Get",
+    DependsOn=[invoke_perm_get.title],
     ApiKeyRequired=False,
     AuthorizationType="AWS_IAM",
     HttpMethod="GET",
