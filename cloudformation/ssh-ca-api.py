@@ -100,7 +100,7 @@ invoke_policy = iam.ManagedPolicy(
         "Version": "2012-10-17",
         "Statement": [
             {
-                "Sid": "create-cert",
+                "Sid": "CreateCert",
                 "Effect": "Allow",
                 "Action": [
                     "execute-api:Invoke"
