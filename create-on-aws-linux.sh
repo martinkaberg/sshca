@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+set -eu
 KMS_KEY_ARN=$1
 function wait_for_stack()
 {
+  set -eu
   declare _stack_name=$1
   declare _status
   while sleep 2
@@ -32,6 +34,7 @@ function wait_for_stack()
 
 function get_output_value()
 {
+  set -eu
   declare _stack_name
   declare _key
   _stack_name=$1
