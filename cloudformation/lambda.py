@@ -8,7 +8,7 @@ from awacs.aws import Policy, Allow, Action, Statement, Principal
 
 t = Template()
 
-t.add_description("ssh ca API")
+t.add_description("lambdas")
 t.add_version("2010-09-09")
 access_stack = t.add_parameter(Parameter(
     "AccessStack",
