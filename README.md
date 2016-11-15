@@ -19,33 +19,65 @@
 ## on server
 
 add too sshd config
+
+
 <code>
+
 TrustedUserCAKeys /etc/ssh/ca.pub
 LogLevel VERBOSE
+
 </code>
+
+
 run this as root
+
+
 <code>
+
 bash scripts/get-ca.sh dev > /etc/ssh/ca.pub
 chmod 0600 /etc/ssh/ca.pub
 service sshd restart
+
 </code>
+
+
 ## on client
 Get a new cert
+
+
 <code>
+
 python scripts/get-cert.py --host $API_ID.execute-api.eu-west-1.amazonaws.com --public-key-file ~/.ssh/id_rsa.pub --stage dev
+
+
 </code>
+
 
 You could also create an alias
+
+
 <code>
+
 alias ssh='python scripts/get-cert.py --host $API_ID.execute-api.eu-west-1.amazonaws.com --stage dev --public-key-file ~/.ssh/id_rsa.pub; ssh'
+
 </code>
+
 
 To view the cert
+
+
 <code>
+
+
 ssh-keygen -L -f ~/.ssh/id_rsa-cert.pub
+
+
 </code>
 
+
+
 ## Modifications to bless
+
 
 ### lambda_handler.py
 
@@ -103,7 +135,10 @@ do a simple get against the api to get the public key. This one should be instal
 ### get-cert.py
 Will do a sign POST request against the api using MFA with the public key you want to get a cert signed for.
 The cert will be created next to your key , ie id_rsa-cert.pub
+
+
 <code>
+
 Usage: get-cert.py [OPTIONS]
 
 Options:
@@ -112,7 +147,11 @@ Options:
   --stage TEXT            Deployment stage
   --public-key-file PATH  ssh public key file
   --help                  Show this message and exit.
+
+
 <code>
+
+
 If token-code is not passed it will be prompted for
 
 Once you have the cert just do ssh user@host and ssh agent should pick up the cert.
