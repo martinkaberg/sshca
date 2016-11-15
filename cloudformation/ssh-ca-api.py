@@ -50,12 +50,7 @@ LAMBDA_URI = Join("", [
     LAMBDA_ARN,
     "invocations"
 ])
-invoke_perm = t.add_resource(awslambda.Permission(
-    "InvokePerm",
-    Action="lambda:InvokeFunction",
-    FunctionName=LAMBDA_ARN,
-    Principal="apigateway.amazonaws.com",
-))
+
 
 account = t.add_resource(apigateway.Account(
     "Account",
@@ -117,11 +112,33 @@ get = t.add_resource(apigateway.Method(
     ResourceId=Ref(proxy_resource),
     RestApiId=Ref(api)
 ))
-invoke_perm = t.add_resource(awslambda.Permission(
-    "InvokePerm",
+invoke_perm_get = t.add_resource(awslambda.Permission(
+    "InvokePermGet",
     Action="lambda:InvokeFunction",
     FunctionName=LAMBDA_ARN,
     Principal="apigateway.amazonaws.com",
+    SourceArn=Join(":",[
+        "arn:aws:execute-api",
+        Ref("AWS::Region"),
+        Ref("AWS::AccountId"),
+        Join("",[
+            Ref(api),
+             "/*/GET/*"
+        ])])
+))
+invoke_perm_post = t.add_resource(awslambda.Permission(
+    "InvokePermPost",
+    Action="lambda:InvokeFunction",
+    FunctionName=LAMBDA_ARN,
+    Principal="apigateway.amazonaws.com",
+    SourceArn=Join(":",[
+        "arn:aws:execute-api",
+        Ref("AWS::Region"),
+        Ref("AWS::AccountId"),
+        Join("",[
+            Ref(api),
+             "/*/POST/*"
+        ])])
 ))
 t.add_output(Output(
     "RootResourceId",
