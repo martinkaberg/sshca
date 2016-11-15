@@ -45,7 +45,7 @@ bless = t.add_resource(awslambda.Function(
 
 ))
 LAMBDA_ARN = GetAtt(bless, "Arn")
-LAMBDA_URI = Join("", [
+LAMBDA_URI = Join("/", [
     "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/",
     LAMBDA_ARN,
     "invocations"
