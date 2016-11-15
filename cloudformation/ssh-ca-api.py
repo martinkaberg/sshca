@@ -16,35 +16,26 @@ access_stack = t.add_parameter(Parameter(
     Description="Access stack name",
     Default="access"
 ))
+lambda_stack = t.add_parameter(Parameter(
+    "LambdaStack",
+    Type="String",
+    Description="Access stack name",
+    Default="lambda"
+))
 dir = os.path.dirname(__file__)
 with open(os.path.join(dir, "../swagger/dev.json")) as json_data:
     swagger = json.load(json_data)
 swagger["info"]["title"] = "ssh-ca"
 api = t.add_resource(apigateway.RestApi(
     "Api",
-    Name="ssh-ca-cfn"
-    # Body=swagger
+    Name="ssh-ca-cfn",
+    Body=swagger
 ))
 
-bless = t.add_resource(awslambda.Function(
-    "Bless",
-    Code=awslambda.Code(
-        S3Bucket=ImportValue(
-            Sub("${AccessStack}-LambdaBucket")
-        ),
-        S3Key="bless_lambda.zip"
-    ),
-    FunctionName="blessapi",
-    Handler="lambda_handler.lambda_handler",
-    MemorySize="128",
-    Role=ImportValue(
-        Sub("${AccessStack}-BlessRole")
-    ),
-    Runtime="python2.7",
-    Timeout=300
 
-))
-LAMBDA_ARN = GetAtt(bless, "Arn")
+LAMBDA_ARN = ImportValue(
+        Sub("${AccessStack}-Bless")
+)
 LAMBDA_URI = Join("/", [
     "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/",
     LAMBDA_ARN,
@@ -59,13 +50,7 @@ account = t.add_resource(apigateway.Account(
         Sub("${AccessStack}-SshCaApiRole")
     )
 ))
-proxy_resource = t.add_resource(apigateway.Resource(
-    "ProxyResource",
-    ParentId=GetAtt(api, "RootResourceId"),
-    PathPart="{proxy+}",
-    RestApiId=Ref(api)
 
-))
 invoke_perm_get = t.add_resource(awslambda.Permission(
     "InvokePermGet",
     Action="lambda:InvokeFunction",
@@ -94,44 +79,6 @@ invoke_perm_post = t.add_resource(awslambda.Permission(
              "/*/POST/*"
         ])])
 ))
-post = apigateway.Method(
-    "Post",
-    DependsOn=[invoke_perm_post.title],
-    ApiKeyRequired=False,
-    AuthorizationType="AWS_IAM",
-    HttpMethod="POST",
-    MethodResponses=[],
-    Integration=apigateway.Integration(
-        Type="AWS_PROXY",
-        IntegrationHttpMethod="POST",
-        Uri=LAMBDA_URI,
-        PassthroughBehavior="Never",
-        IntegrationResponses=[]
-
-    ),
-    ResourceId=Ref(proxy_resource),
-    RestApiId=Ref(api)
-)
-get = apigateway.Method(
-    "Get",
-    DependsOn=[invoke_perm_get.title],
-    ApiKeyRequired=False,
-    AuthorizationType="AWS_IAM",
-    HttpMethod="GET",
-    MethodResponses=[],
-
-    Integration=apigateway.Integration(
-        Type="AWS_PROXY",
-        IntegrationHttpMethod="POST",
-        Uri=LAMBDA_URI,
-        PassthroughBehavior="Never",
-        IntegrationResponses=[]
-
-
-    ),
-    ResourceId=Ref(proxy_resource),
-    RestApiId=Ref(api)
-)
 
 t.add_output(Output(
     "RootResourceId",

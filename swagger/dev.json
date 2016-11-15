@@ -1,11 +1,11 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2016-11-14T23:26:24Z",
+    "version": "2016-11-15T04:23:30Z",
     "title": "ssh-ca-cfn"
   },
-  "host": "joxcu5vyr0.execute-api.eu-west-1.amazonaws.com",
-  "basePath": "/dev2",
+  "host": "jokl5ev0qg.execute-api.eu-west-1.amazonaws.com",
+  "basePath": "/dev",
   "schemes": [
     "https"
   ],
@@ -25,14 +25,29 @@
         ],
         "responses": {
           "200": {
-            "description": "200 response"
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/Empty"
+            }
           }
+        },
+        "x-amazon-apigateway-integration": {
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:486089510432:function:blessapi/invocations",
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "cacheNamespace": "fbs6bg",
+          "cacheKeyParameters": [
+            "method.request.path.proxy"
+          ],
+          "type": "aws_proxy"
         }
       },
       "post": {
-        "consumes": [
-          "application/json"
-        ],
         "produces": [
           "application/json"
         ],
@@ -42,38 +57,38 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "Anything",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Anything"
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "200 response"
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/Empty"
+            }
           }
         },
-        "security": [
-          {
-            "sigv4": []
-          }
-        ]
+        "x-amazon-apigateway-integration": {
+          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:486089510432:function:blessapi/invocations",
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "cacheNamespace": "fbs6bg",
+          "cacheKeyParameters": [
+            "method.request.path.proxy"
+          ],
+          "type": "aws_proxy"
+        }
       }
     }
   },
-  "securityDefinitions": {
-    "sigv4": {
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header",
-      "x-amazon-apigateway-authtype": "awsSigv4"
-    }
-  },
   "definitions": {
-    "Anything": {}
+    "Empty": {
+      "type": "object",
+      "title": "Empty Schema"
+    }
   }
 }
