@@ -59,15 +59,6 @@ account = t.add_resource(apigateway.Account(
         Sub("${AccessStack}-SshCaApiRole")
     )
 ))
-
-cert_resource = t.add_resource(apigateway.Resource(
-    "CertResource",
-    ParentId=GetAtt(api, "RootResourceId"),
-    PathPart="cert",
-    RestApiId=Ref(api)
-
-))
-
 proxy_resource = t.add_resource(apigateway.Resource(
     "ProxyResource",
     ParentId=GetAtt(api, "RootResourceId"),
