@@ -149,7 +149,7 @@ t.add_output(Output(
 
 deployment = t.add_resource(apigateway.Deployment(
     "Deployment",
-    DependsOn=[get.title, post.title],
+    #DependsOn=[get.title, post.title],
     RestApiId=Ref(api),
     StageDescription=apigateway.StageDescription(
         CacheClusterEnabled=False,
