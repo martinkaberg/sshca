@@ -87,6 +87,7 @@ wait_for_stack access
 LAMBDA_BUCKET=$(get_output_value access LambdaBucket)
 CFN_BUCKET=$(get_output_value access CfnBucket)
 stack_exists lambda || {
+	set -eu
 	cd ../lambda
 	make all
 	aws s3 cp build/publish/bless_lambda.zip s3://${LAMBDA_BUCKET}
@@ -104,3 +105,6 @@ cd ..
 API_HOST="${API_ID}.execute-api.eu-west-1.amazonaws.com"
 echo "Testing pub CA: https://${API_HOST}/dev/cert"
 curl -vvv "https://${API_HOST}/dev/cert"
+
+echo "with an iam user run:"
+echo "python scripts/get-cert.py --host ${API_HOST} --stage dev --public-key-file ~/.ssh/id_rsa.pub"
