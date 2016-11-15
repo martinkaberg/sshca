@@ -1,47 +1,67 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2016-11-14T01:00:30Z",
-    "title": "ssh-ca"
+    "version": "2016-11-14T23:26:24Z",
+    "title": "ssh-ca-cfn"
   },
+  "host": "joxcu5vyr0.execute-api.eu-west-1.amazonaws.com",
+  "basePath": "/dev2",
   "schemes": [
     "https"
   ],
   "paths": {
-    "/{cert+}": {
-      "x-amazon-apigateway-any-method": {
+    "/{proxy+}": {
+      "get": {
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "name": "cert",
+            "name": "proxy",
             "in": "path",
             "required": true,
             "type": "string"
           }
         ],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "200 response"
+          }
+        }
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "proxy",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "Anything",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Anything"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response"
+          }
+        },
         "security": [
           {
             "sigv4": []
           }
-        ],
-        "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-west-1:486089510432:function:testrest/invocations",
-          "responses": {
-            "default": {
-              "statusCode": "200"
-            }
-          },
-          "passthroughBehavior": "when_no_match",
-          "httpMethod": "POST",
-          "cacheNamespace": "a19pd7",
-          "cacheKeyParameters": [
-            "method.request.path.cert"
-          ],
-          "type": "aws_proxy"
-        }
+        ]
       }
     }
   },
@@ -52,5 +72,8 @@
       "in": "header",
       "x-amazon-apigateway-authtype": "awsSigv4"
     }
+  },
+  "definitions": {
+    "Anything": {}
   }
 }

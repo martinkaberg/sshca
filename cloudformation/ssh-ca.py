@@ -10,7 +10,12 @@ t = Template()
 
 t.add_description("ssh ca API")
 t.add_version("2010-09-09")
-
+access_stack = t.add_parameter(Parameter(
+    "AccessStack",
+    Type="String",
+    Description="Access stack name",
+    Default="access-stack"
+))
 dir = os.path.dirname(__file__)
 with open(os.path.join(dir, "../swagger/dev.json")) as json_data:
     swagger = json.load(json_data)
@@ -28,29 +33,16 @@ invoke_perm = t.add_resource(awslambda.Permission(
     FunctionName=LAMBDA_ARN,
     Principal="apigateway.amazonaws.com",
 ))
-role = t.add_resource(iam.Role(
-    "Role",
-    AssumeRolePolicyDocument={
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Sid": "",
-                "Effect": "Allow",
-                "Principal": {
-                    "Service": "apigateway.amazonaws.com"
-                },
-                "Action": "sts:AssumeRole"
-            }
-        ]
-    },
-    Path="/",
-    ManagedPolicyArns=["arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"]
-))
+
 
 account = t.add_resource(apigateway.Account(
     "Account",
     DependsOn=api.title,
-    CloudWatchRoleArn=GetAtt(role, "Arn")
+    CloudWatchRoleArn=ImportValue(
+
+        Sub("${AccessStack}-Vpc")
+
+    )
 ))
 
 cert_resource = t.add_resource(apigateway.Resource(

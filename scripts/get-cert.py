@@ -1,6 +1,7 @@
 from awsrequests import AwsRequester
 import boto3
 import click
+import subprocess
 
 
 def get_mfa():
@@ -16,9 +17,11 @@ def get_mfa():
               help="The 6 digit number from your MFA device")
 @click.option('--host', help="Hostname of the api gateway")
 @click.option('--stage', help="Deployment stage")
-@click.option('--resource', help="Api resource")
-@click.option('--target', help="Target")
-def main(token_code, host, stage, resource, target):
+@click.option('--public-key-file', type=click.Path(exists=True), help="ssh public key file")
+def main(token_code, host, stage, public_key_file):
+    with open(public_key_file) as f:
+        pub_key = f.read()
+    f.close()
     sts_client = boto3.client('sts')
     token = sts_client.get_session_token(
         DurationSeconds=900,
@@ -35,16 +38,24 @@ def main(token_code, host, stage, resource, target):
     )
 
     response = req.post(
-        "http://{}/{}/{}/{}".format(host, stage, resource, target),
-        data={
-            "public_key_to_sign": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC3j8yMKRpL4Y5QwQeM94/1Rzav2dRRbEzyns1OMmG4l75KupqDb2vHWOnXy6he0Fc497BrKT0L00ZT7INQq7+bgClNMvZefN6UZgM9gVcWkz1nmCzhu1/WeieeHjFsplUAjH86npN59sk1RQEY8O8ZcIWHi7AIadN1Sx5rQWT41eO00Lb0bNIk0jPDJN5JmbA3R4zWisuf0D9D+68zkP7UNL4qJyD27+LSOiv6Y7RbdQ62H7MZvq2tC519+IMTsCDJCuGhrbumKvAv74VAi66fmnQKPZQzl+l++OLU9vz6SMKpttKHynxdW2Si7bJZ4UwEAburBP5uy+su6YaJt80Iav3Uyj0CGExU8s+9TNIrcXrTnKuaxO+bTlXRAmVVf0l0rKlmoDb4s++xba3WVFEYThO7MysgDcCte8Trg1mXNrYerWSZt3RLlqLYE+S9Clh6yBfHLDdKGWh1U5TLY6Elj++d3K5LRb4XDFevEEdWigcsEa8Uxwi9i+6DlMRUijk9wQeegrWOozEmvcJLBXQY+svIEElYqUeYkDQRpJQgHo9h75o7ewAOhId+QA+X2n/ItwZSto55IXj2gHMNDS5adzRzJLt3RZAp7oE2/yj3oqpLlJjZ152SKBEUulZ9uwKKnvxrwawc0AOMcRSnTIlduvTb90O6wJxzRpiKepGvTQ== fishdaemon"
+        "https://{}/{}/{}".format(host, stage, "cert"),
+        json={
+            "public_key_to_sign": pub_key
         },
         verify=True
     )
+    cert_file = '.'.join(public_key_file.split(".")[:-1]) + "-cert.pub"
+    with open(cert_file, "w+") as f:
+        f.write(response.text)
+    f.close()
 
-    click.echo(response.status_code)
-
-    click.echo(response.text)
+    key_gen_cmd = [
+        "ssh-keygen",
+        "-L",
+        "-f",
+        "id_rsa-cert.pub"
+    ]
+    subprocess.call(key_gen_cmd)
 
 
 if __name__ == '__main__':
