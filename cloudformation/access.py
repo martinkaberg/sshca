@@ -76,7 +76,7 @@ bless_role = t.add_resource(iam.Role(
 ))
 t.add_output(Output(
     bless_role.title,
-    Value=Ref(bless_role),
+    Value=GetAtt(bless_role,"Arn"),
     Export=Export(
         Sub("${AWS::StackName}-" + bless_role.title)
     )
@@ -101,7 +101,7 @@ ssh_ca_api_role = t.add_resource(iam.Role(
 
 t.add_output(Output(
     ssh_ca_api_role.title,
-    Value=Ref(ssh_ca_api_role),
+    Value=GetAtt(ssh_ca_api_role,"Arn"),
     Export=Export(
         Sub("${AWS::StackName}-" + ssh_ca_api_role.title)
     )
