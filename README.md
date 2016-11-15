@@ -21,7 +21,7 @@
 add too sshd config
 
 
-<code>
+```
 
 TrustedUserCAKeys /etc/ssh/ca.pub
 LogLevel VERBOSE
@@ -32,7 +32,7 @@ LogLevel VERBOSE
 run this as root
 
 
-<code>
+```
 
 bash scripts/get-ca.sh dev > /etc/ssh/ca.pub
 chmod 0600 /etc/ssh/ca.pub
@@ -45,7 +45,7 @@ service sshd restart
 Get a new cert
 
 
-<code>
+```
 
 python scripts/get-cert.py --host $API_ID.execute-api.eu-west-1.amazonaws.com --public-key-file ~/.ssh/id_rsa.pub --stage dev
 
@@ -56,7 +56,7 @@ python scripts/get-cert.py --host $API_ID.execute-api.eu-west-1.amazonaws.com --
 You could also create an alias
 
 
-<code>
+```
 
 alias ssh='python scripts/get-cert.py --host $API_ID.execute-api.eu-west-1.amazonaws.com --stage dev --public-key-file ~/.ssh/id_rsa.pub; ssh'
 
@@ -66,7 +66,7 @@ alias ssh='python scripts/get-cert.py --host $API_ID.execute-api.eu-west-1.amazo
 To view the cert
 
 
-<code>
+```
 
 
 ssh-keygen -L -f ~/.ssh/id_rsa-cert.pub
@@ -137,7 +137,7 @@ Will do a sign POST request against the api using MFA with the public key you wa
 The cert will be created next to your key , ie id_rsa-cert.pub
 
 
-<code>
+```
 
 Usage: get-cert.py [OPTIONS]
 
@@ -149,7 +149,7 @@ Options:
   --help                  Show this message and exit.
 
 
-<code>
+```
 
 
 If token-code is not passed it will be prompted for
