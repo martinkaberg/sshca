@@ -43,3 +43,5 @@ t.add_output(Output(
         Sub("${AWS::StackName}-" + bless.title)
     )
 ))
+
+print t.to_json()
