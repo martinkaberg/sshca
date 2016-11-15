@@ -125,7 +125,7 @@ invoke_policy = iam.ManagedPolicy(
         ]
     }
 )
-
+t.add_resource(invoke_policy)
 t.add_output(Output(
     "Deployment",
     Value=Ref(deployment)
