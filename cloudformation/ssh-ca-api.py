@@ -46,6 +46,11 @@ bless = t.add_resource(awslambda.Function(
 
 ))
 LAMBDA_ARN = GetAtt(bless,"Arn")
+LAMBDA_URI = Join("",[
+    "arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/",
+    LAMBDA_ARN,
+    "invocations"
+])
 invoke_perm = t.add_resource(awslambda.Permission(
     "InvokePerm",
     Action="lambda:InvokeFunction",
@@ -86,7 +91,7 @@ post = t.add_resource(apigateway.Method(
     Integration=apigateway.Integration(
         Type="AWS_PROXY",
         IntegrationHttpMethod="POST",
-        Uri="arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/{}/invocations".format(LAMBDA_ARN),
+        Uri=LAMBDA_URI,
         PassthroughBehavior="Never",
         IntegrationResponses=[]
 
@@ -103,7 +108,7 @@ get = t.add_resource(apigateway.Method(
     Integration=apigateway.Integration(
         Type="AWS_PROXY",
         IntegrationHttpMethod="POST",
-        Uri="arn:aws:apigateway:eu-west-1:lambda:path/2015-03-31/functions/{}/invocations".format(LAMBDA_ARN),
+        Uri=LAMBDA_URI,
         PassthroughBehavior="Never",
         IntegrationResponses=[]
 

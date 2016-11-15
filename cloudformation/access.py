@@ -17,11 +17,11 @@ kms_arn = t.add_parameter(Parameter(
 ))
 lambda_bucket = t.add_resource(s3.Bucket(
     "LambdaBucket",
-    DeletionPolicy="Delete"
+    DeletionPolicy="Retain"
 ))
 cfn_bucket = t.add_resource(s3.Bucket(
     "CfnBucket",
-    DeletionPolicy="Delete"
+    DeletionPolicy="Retain"
 ))
 
 t.add_output(Output(
