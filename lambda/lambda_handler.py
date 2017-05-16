@@ -33,7 +33,7 @@ import ipaddress
 class CustomSchema(Schema):
     iam_arn = fields.Str()
     public_key_to_sign = fields.Str()
-    username = fields.Str(validate=validate_user)
+    username = fields.Str()
 
     @post_load
     def make_bless_request(self, data):
