@@ -38,7 +38,15 @@ def encrypt(password, key_alias, build_dir, key_comment):
 
     config = ConfigParser.ConfigParser()
     config.read("{}/bless/config/bless_deploy_example.cfg".format(build_dir))
-    config.set("Bless Options", "certificate_validity_seconds", "3600")
+    config.set("Bless Options", "certificate_validity_after_seconds", "3600")
+    config.set("Bless Options", "certificate_validity_before_seconds", "3600")
+
+    config.set("Bless Options", "entropy_minimum_bits", "2048")
+
+    config.set("Bless Options", "random_seed_bytes", "256")
+
+    config.set("Bless Options", "logging_level", "INFO")
+
     config.set("Bless CA", "kms_key_id", 'alias/{}'.format(key_alias))
     config.set("Bless CA", "eu-west-1_password", cipher_b64)
     config.set("Bless CA", "ca_private_key_file", "ca.pem")
