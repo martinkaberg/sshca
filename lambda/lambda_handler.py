@@ -20,7 +20,7 @@ from bless.config.bless_config import (
     CA_PRIVATE_KEY_FILE_OPTION,
     LOGGING_LEVEL_OPTION
 )
-from bless.request.bless_request import BlessSchema, validate_ip, validate_user
+from bless.request.bless_request import BlessSchema , validate_user
 from bless.ssh.certificate_authorities.ssh_certificate_authority_factory import \
     get_ssh_certificate_authority
 from bless.ssh.certificates.ssh_certificate_builder import SSHCertificateType
