@@ -47,7 +47,7 @@ def encrypt(password, key_alias, build_dir, key_comment):
 
     config.set("Bless Options", "logging_level", "INFO")
 
-    config.set("Bless Options", "USERNAME_VALIDATION_OPTIONS", "disabled")
+    config.set("Bless Options", "username_validation", "disabled")
 
     config.set("Bless CA", "kms_key_id", 'alias/{}'.format(key_alias))
     config.set("Bless CA", "eu-west-1_password", cipher_b64)
